@@ -1,0 +1,2 @@
+# flutter_architecture
+provide实现mvvm架构
