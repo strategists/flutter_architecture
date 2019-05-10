@@ -26,11 +26,11 @@ class _LoginPageState extends State<LoginPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.light));
-    /*return ProviderNode(
+    return ProviderNode(
       providers: _providers,
       child: _buildScaffold(),
-    );*/
-    return _buildScaffold();
+    );
+//    return _buildScaffold();
   }
 
   Scaffold _buildScaffold() {
@@ -39,8 +39,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.login_bg,
       body: SafeArea(
         child: Container(
-          color: Colors.red,
-          child: _buildColumn(),
+          child: _buildStack(),
         ),
       ),
     );
@@ -61,56 +60,65 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildColumn() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        _buildLogo(),
-        Expanded(flex: 1),
-        _buildButton(),
-        _buildProtocolText(),
-      ],
-    );
-  }
-
-
-
   Widget _buildLogo() {
+    var icon = Icon(
+      Icons.camera,
+      size: 198.0,
+    );
     return Center(
-      child: Icon(
-        Icons.camera,
-        size: 50,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 150.0),
+        child: icon,
       ),
     );
   }
 
   Widget _buildButton() {
-
+    var raisedButton = RaisedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) {
+              return InputMobilePage();
+            },
+          ),
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      child: Text('手机号登录'),
+      color: Colors.blue,
+      textColor: Colors.white,
+    );
     var align = Align(
       alignment: Alignment.bottomCenter,
-      child: RaisedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) {
-                return InputMobilePage();
-              },
-            ),
-          );
-        },
-        child: Text('手机号登录'),
-        color: Colors.blue,
-        textColor: Colors.white,
+      child: SizedBox(
+        width: 164,
+        height: 38,
+        child: raisedButton,
       ),
     );
-    return Padding(padding: EdgeInsets.only(bottom: 18.0),child: align,);
+    return Padding(
+      padding: EdgeInsets.only(bottom: 68.0 + 30.0),
+      child: align,
+    );
   }
 
   Widget _buildProtocolText() {
     var text = Text("I am Jack");
-    return Align(child: text,alignment: Alignment.centerRight,);
+    var align = Align(
+      child: text,
+      alignment: Alignment.bottomCenter,
+    );
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: 68,
+      ),
+      child: align,
+    );
   }
 }
