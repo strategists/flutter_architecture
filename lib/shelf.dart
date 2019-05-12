@@ -45,7 +45,6 @@ class _ShelfPageState extends State<_ShelfPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.shelf_bg,
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );

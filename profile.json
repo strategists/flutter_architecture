@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "icon": null,
+      "text": "账户管理",
+      "isGroup": false,
+      "isGroupHeader": true
+    },
+    {
+      "icon": null,
+      "text": "结算账户",
+      "isGroup": true,
+      "isGroupHeader": false
+    },
+    {
+      "icon": null,
+      "text": "业务账户",
+      "isGroup": false,
+      "isGroupHeader": false
+    },
+    {
+      "icon": null,
+      "text": "账户认证",
+      "isGroup": false,
+      "isGroupHeader": false
+    },
+    {
+      "icon": null,
+      "text": "设置",
+      "isGroup": false,
+      "isGroupHeader": false
+    }
+  ]
+}

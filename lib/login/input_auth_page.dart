@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
+import 'package:flutter_architecture/style/style.dart';
+import 'package:flutter_architecture/widget/button.dart';
+import 'package:flutter_architecture/widget/timer_text.dart';
+import 'package:flutter_architecture/shelf.dart';
+import 'package:rxdart/rxdart.dart';
 
 class InputAuthPage extends StatefulWidget {
   final String mobile;
@@ -18,21 +23,11 @@ class _InputAuthPageState extends State<InputAuthPage> {
   /// Default max pin length.
   static final int _pinLength = 4;
 
-  /// Default Text style.
-  static final TextStyle _textStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 24,
-  );
+  String _mobile;
 
   /// Control the input text field.
   PinEditingController _pinEditingController =
       PinEditingController(pinLength: _pinLength, autoDispose: false);
-
-  /// Decorate the outside of the Pin.
-  PinDecoration _pinDecoration = UnderlineDecoration(
-    textStyle: _textStyle,
-    enteredColor: Colors.deepOrange,
-  );
 
   /// Control whether show the obscureCode.
   bool _obscureEnable = false;
@@ -40,6 +35,10 @@ class _InputAuthPageState extends State<InputAuthPage> {
   PinEntryType _pinEntryType = PinEntryType.underline;
   Color _solidColor = Colors.purpleAccent;
   bool _solidEnable = false;
+
+  var _errorState = false;
+  var _clickable = true;
+  TimerValueNotifier notifier = TimerValueNotifier(false);
 
   /// Set a random pin to the textField.
   void _setPinValue() {
@@ -58,14 +57,40 @@ class _InputAuthPageState extends State<InputAuthPage> {
   void initState() {
     _pinEditingController.addListener(() {
       debugPrint('changed pin:${_pinEditingController.text}');
+      if (checkCode(_pinEditingController.text)) {
+        Future.delayed(const Duration(seconds: 1), gotoShelfPage);
+      }
     });
+    _mobile = widget.mobile;
     super.initState();
+  }
+
+   @override
+  void reassemble() {
+    super.reassemble();
+    _clickable = true;
   }
 
   @override
   void dispose() {
     _pinEditingController.dispose();
     super.dispose();
+  }
+
+  bool checkCode(String code) {
+    ///todo remote check
+    if (code.length == 4) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void gotoShelfPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Shelf()),
+    );
   }
 
   @override
@@ -94,7 +119,10 @@ class _InputAuthPageState extends State<InputAuthPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _buildTitleText(),
+        _buildSubText(),
+        _buildTipText(),
         _buildPinInput(),
+        _buildFetchCodeContainer(),
       ],
     );
   }
@@ -114,18 +142,84 @@ class _InputAuthPageState extends State<InputAuthPage> {
     );
   }
 
+  Widget _buildSubText() {
+    return Padding(
+      padding: EdgeInsets.only(top: 16),
+      child: Text("验证码已经发送到：$_mobile"),
+    );
+  }
+
+  Widget _buildTipText() {
+    return Padding(
+      padding: EdgeInsets.only(top: 38),
+      child: Text(
+        _errorState ? "验证码错误或已过期" : "4位数字验证码",
+        style: TextStyle(
+          fontSize: 12,
+          fontStyle: FontStyle.italic,
+          color: _errorState ? AppColors.input_error : AppColors.input_def,
+        ),
+      ),
+    );
+  }
+
   Widget _buildPinInput() {
     return Container(
+      width: 150,
       child: PinInputTextField(
         pinLength: _pinLength,
-        decoration: _pinDecoration,
+        decoration: UnderlineDecoration(
+          textStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          enteredColor: AppColors.input_def,
+          color: AppColors.input_def,
+          lineHeight: 1.0,
+        ),
         pinEditingController: _pinEditingController,
         autoFocus: true,
-        textInputAction: TextInputAction.go,
+        textInputAction: TextInputAction.done,
         onSubmit: (pin) {
           debugPrint('submit pin:$pin');
         },
       ),
+    );
+  }
+
+  Widget _buildFetchCodeContainer() {
+    return Expanded(
+      flex: 1,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[_buildTimerText(), _buildTextButton()],
+      ),
+    );
+  }
+
+  Widget _buildTimerText() {
+    return TimerText(
+      countdown: 5,
+      data: notifier,
+      onFinish: () {
+        setState(() => _clickable = !_clickable);
+      },
+    );
+  }
+
+  Widget _buildTextButton() {
+    return TextButton(
+      available: _clickable,
+      onTap: () {
+        setState(() {
+          _clickable = !_clickable;
+          notifier.value = true;
+        });
+      },
+      text: "语音获取",
+      textColor: AppColors.fetch_code_text,
     );
   }
 }
