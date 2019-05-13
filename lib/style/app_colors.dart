@@ -11,4 +11,5 @@ import 'package:flutter/material.dart';
   static const Color fetch_code_text = Color(0xFF1B91FF);
 
   static const Color mine_header = Color(0xFF293862);
+  static const Color mine_preference = Color(0xFFF8F9FE);
 }

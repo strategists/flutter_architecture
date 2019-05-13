@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture/style/style.dart';
+import 'package:flutter_architecture/entity/profile_entity.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _MinePageState extends State<MinePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
       PreferenceItem item;
       if (i == 0) {
         item = PreferenceItem(text: "账户管理", isGroupHeader: true);
@@ -36,12 +37,61 @@ class _MinePageState extends State<MinePage> {
   Widget build(BuildContext context) {
     var safeArea = SafeArea(
       child: Stack(
-        children: <Widget>[_buildList()],
+        children: <Widget>[_buildPreferenceIteBg(), _buildList()],
       ),
     );
     return Container(
       color: AppColors.mine_header,
-      child: safeArea,
+      child: SafeArea(child: safeArea),
+    );
+  }
+
+  Widget _buildCollapsible() {
+    return NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          _buildSliverAppBar(),
+        ];
+      },
+      body: _buildList(),
+    );
+  }
+
+  SliverAppBar _buildSliverAppBar() {
+    return SliverAppBar(
+      //展开高度
+      expandedHeight: 150.0,
+      //是否随着滑动隐藏标题
+      floating: false,
+      //是否固定在顶部
+      pinned: true,
+      //可折叠的应用栏
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        title: Text(
+          '可折叠的组件',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+        ),
+        background: Image.network(
+          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg',
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreferenceIteBg() {
+    return Positioned(
+      bottom: 0,
+      height: 300,
+      left: 0,
+      right: 0,
+      child: Container(
+        color: AppColors.mine_preference,
+      ),
     );
   }
 
@@ -50,7 +100,7 @@ class _MinePageState extends State<MinePage> {
     children.add(_buildTitle());
     children.add(_buildSubTitle());
     children.add(_buildHeader());
-    children.addAll(_buildGrop(_preferenceItems));
+    children.addAll(_buildGroup(_preferenceItems));
     return ListView(
       children: children,
       controller: ScrollController(),
@@ -164,18 +214,20 @@ class _MinePageState extends State<MinePage> {
   }
 
   /// build group
-
-  List<Widget> _buildGrop(List<PreferenceItem> items) {
+  List<Widget> _buildGroup(List<PreferenceItem> items) {
     List<Widget> widgets = [];
     for (int i = 0; i < items.length; i++) {
       PreferenceItem item = items[i];
       widgets.add(_buildItem(item));
-      if (item.isGroup) {
-        widgets.add(_buildLine());
-      } else {
-        widgets.add(_buildGap());
+      if (!item.isGroupHeader) {
+        if (item.isGroup) {
+          widgets.add(_buildLine());
+        } else {
+          widgets.add(_buildGap());
+        }
       }
     }
+    return widgets;
   }
 
   Widget _buildItem(PreferenceItem item) {
@@ -191,7 +243,16 @@ class _MinePageState extends State<MinePage> {
       trailing: item.isGroupHeader ? null : Icon(Icons.chevron_right),
     );
     return Container(
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: item.isGroupHeader
+            ? BorderRadius.only(
+                topLeft: Radius.circular(4),
+                topRight: Radius.circular(4),
+              )
+            : null,
+      ),
+//      color: Colors.white,
       child: listTile,
     );
   }
@@ -208,23 +269,8 @@ class _MinePageState extends State<MinePage> {
 
   Widget _buildGap() {
     return Container(
-      color: Colors.grey,
+//      color: Colors.grey,
       height: 6.0,
     );
   }
-}
-
-class Profile {}
-
-class PreferenceItem {
-  dynamic icon;
-  String text;
-  bool isGroup;
-  bool isGroupHeader;
-
-  PreferenceItem(
-      {this.icon,
-      @required this.text,
-      this.isGroup = false,
-      this.isGroupHeader = false});
 }

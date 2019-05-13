@@ -26,7 +26,7 @@ class App extends StatelessWidget {
       color: Colors.red,
       theme: ThemeData(brightness: Brightness.light,
 //        primarySwatch: Colors.blue,
-          accentColor: Colors.white,
+//          accentColor: Colors.white,
           ),
       home: Provide<LoginViewModel>(
         builder: (context, child, model) {
