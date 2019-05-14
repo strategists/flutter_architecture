@@ -39,6 +39,10 @@ class _InputMobilePageState extends State<InputMobileContent> {
   void initState() {
     super.initState();
     _textEditingController = new TextEditingController();
+    widget.model
+        .readCacheMobile()
+        .then((onValue) => _textEditingController.text = onValue)
+        .whenComplete(() {});
   }
 
   void checkMobile(String mobile) {
@@ -47,7 +51,9 @@ class _InputMobilePageState extends State<InputMobileContent> {
       _errorState = !ok;
     });
     //cache mobile
-    if (ok) {}
+    if (ok) {
+      widget.model.writeCacheMobile(mobile);
+    }
   }
 
   bool mobileOk(String mobile) {

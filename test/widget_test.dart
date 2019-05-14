@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_architecture/app.dart';
+import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -27,4 +29,32 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+  test('Create Observable from Future', () async {
+    print('start');
+    Observable<String> fromFutureObservable =
+        Observable.fromFuture(asyncFunction());
+    fromFutureObservable.doOnData((onData) => print("doOnData :$onData")).doOnError(() {
+      print('doOnError');
+    }).doOnListen(() {
+      print('doOnListen');
+    }).doOnDone(() {
+      print('doOnDone');
+    }).listen((onData) => print('listen: $onData'));
+  });
+
+  test("create observable", () {
+    //创建一条处理int类型的流
+    StreamController<int> numController = StreamController();
+//    numController.stream.listen((onData) => print("stream onData $onData"));
+    Observable(numController.stream)
+        .doOnData((onData) => print("Observable doOnData: $onData"))
+        .listen((onData) => print("Observable onData$onData"));
+    numController.sink.add(123);
+  });
+}
+
+Future<String> asyncFunction() async {
+//  return Future.delayed(const Duration(seconds: 1), () => "AsyncRsult");
+  return Future.value("hello ever one");
 }

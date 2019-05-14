@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture/style/style.dart';
 import 'package:flutter_architecture/entity/profile_entity.dart';
+import 'package:flutter_architecture/viewmodel/mine_view_model.dart';
+import 'package:provide/provide.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -13,11 +15,15 @@ class _MinePageState extends State<MinePage> {
   String _uname = "张北海";
   String _mobile = "13693302061";
   List<PreferenceItem> _preferenceItems = [];
+  MineViewModel model = new MineViewModel();
+
+  Providers _providers = new Providers();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    debugPrint("initState");
     for (int i = 0; i < 10; i++) {
       PreferenceItem item;
       if (i == 0) {
@@ -31,6 +37,38 @@ class _MinePageState extends State<MinePage> {
       }
       _preferenceItems.add(item);
     }
+    _providers.provide(Provider.value(model));
+
+    model.loadProfile(context);
+  }
+
+  @override
+  void didUpdateWidget(MinePage oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    debugPrint("didUpdateWidget");
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    debugPrint("didChangeDependencies");
+  }
+
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    debugPrint("deactivate");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    debugPrint("dispose");
+    model.dispose();
   }
 
   @override
@@ -40,9 +78,13 @@ class _MinePageState extends State<MinePage> {
         children: <Widget>[_buildPreferenceIteBg(), _buildList()],
       ),
     );
-    return Container(
+    var container = Container(
       color: AppColors.mine_header,
       child: SafeArea(child: safeArea),
+    );
+    return ProviderNode(
+      providers: _providers,
+      child: container,
     );
   }
 

@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
       widgets.add(_buildItemCard());
     }
     return ListView(
-      physics:FixedExtentScrollPhysics(parent: _scrollPhysics),
+      physics:AlwaysScrollableScrollPhysics(parent: _scrollPhysics),
       children: widgets,
     );
   }

@@ -44,4 +44,14 @@ class LoginViewModel extends ViewModel {
     isLogin = true;
     notifyListeners();
   }
+
+  Future<String> readCacheMobile() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getString("mobile");
+  }
+
+  void writeCacheMobile(String mobile) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setString("mobile", mobile);
+  }
 }
