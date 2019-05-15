@@ -6,8 +6,8 @@ class Repository {
   static const String tree = "/tree/json";
 
   void get<M>() {
-//    Future<dynamic> future = HttpManager.getInstance().get(tree);
-    /*future.asStream().listen((onData) {
+    /*Future<dynamic> future = HttpManager.getInstance().get(tree);
+    future.asStream().listen((onData) {
       print("handleError: $onData");
     }).onError((handleError) {
       print("handleError: $handleError");
@@ -21,13 +21,13 @@ class Repository {
       print("doOnError:");
     }).doOnDone(() {
       print("doOnDone:");
-    }).listen((onData) {
+    });/*.listen(*//*(onData) {
       print("listen: $onData");
     }, onError: () {
       print("onError:");
     }, onDone: () {
       print("onDone:");
-    });
+    }*//*null);*/
 //    return observable;
   }
 }

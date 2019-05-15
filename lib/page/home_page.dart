@@ -11,14 +11,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ScrollController _scrollController;
+  ScrollController _listScrollController;
   double w, h;
-  FixedExtentScrollPhysics _scrollPhysics = new FixedExtentScrollPhysics();
+  FixedExtentScrollPhysics _scrollPhysics= new FixedExtentScrollPhysics();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _scrollController = new ScrollController();
+    _listScrollController = new ScrollController();
     _scrollController.addListener(() {});
   }
 
@@ -27,6 +29,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
+    _listScrollController.dispose();
   }
 
   @override
@@ -186,13 +189,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildTitle() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.access_alarms),
+          Text(
+            "中链融",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubTitle() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0),
+      child: Text(
+        "链接信用，融通资金",
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
   Widget _buildListView() {
     List<Widget> widgets = [];
+    widgets.add(_buildTitle());
+    widgets.add(_buildSubTitle());
     for (int i = 0; i < 50; i++) {
       widgets.add(_buildItemCard());
     }
     return ListView(
+      physics: ClampingScrollPhysics(parent: _scrollPhysics),
       children: widgets,
+      controller: _listScrollController,
     );
   }
 

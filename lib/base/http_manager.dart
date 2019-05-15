@@ -13,8 +13,9 @@ class HttpManager {
           receiveTimeout: 30000)
       ..interceptors.add(HeaderInterceptor())
       ..interceptors.add(LogInterceptor(
-        responseBody: true,
         requestBody: true,
+        responseBody: false,
+        responseHeader: false
       ));
   }
 

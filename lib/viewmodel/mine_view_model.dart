@@ -8,6 +8,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture/base/repository.dart';
 
+typedef HandError = void Function();
+
 class MineViewModel extends ViewModel {
   List<PreferenceItem> _items = [];
 
@@ -20,37 +22,43 @@ class MineViewModel extends ViewModel {
     Future<String> loadString =
         DefaultAssetBundle.of(context).loadString("assets/profile.json");
 
-    loadString.then((onValue) => Future.value(onValue));
     loadString.asStream().listen(
       (onData) {
-//        print(onData);
+        print("onData");
         var profileEntity =
             EntityFactory.generateOBJ<ProfileEntity>(json.decode(onData));
         _items.addAll(profileEntity.data);
         _items.forEach((f) => debugPrint("profile $f"));
         notifyListeners();
       },
+      onDone: () {
+        print("onDone");
+      },
     );
 
     //create observable
-    var observable = Observable(DefaultAssetBundle.of(context)
-            .loadString("assets/profile.json")
-            .asStream())
+    /*var observable = Observable.fromFuture(
+            DefaultAssetBundle.of(context).loadString("assets/profile.json"))
         .delay(Duration(milliseconds: 500))
         .asBroadcastStream();
 
     observable.doOnData((onData) {
-      print(onData);
-      var profileEntity = EntityFactory.generateOBJ<ProfileEntity>(onData);
+      print("doOnData");
+      var profileEntity = EntityFactory.generateOBJ<ProfileEntity>(json.decode(onData));
       _items.addAll(profileEntity.data);
       _items.forEach((f) => debugPrint("profile $f"));
+      notifyListeners();
     }).doOnError(() {
       debugPrint("error");
     }).doOnListen(() {
       print("doOnListen");
     }).doOnDone(() {
       print("doOnDone");
-    });
+    }).listen((onData){
+      print("listen onData");
+    },onDone: (){
+      print("listen onDone");
+    },cancelOnError: false);*/
   }
 
   void fetch() {

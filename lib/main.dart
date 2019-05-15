@@ -11,4 +11,17 @@ void main() {
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+
+  test(fun: () {
+    print("fun-xx");
+  }, onOk: () {
+    print("ok-xx");
+  });
+}
+
+void test({Function fun, void onOk()}) {
+  print("fun:$fun");
+  fun();
+  print("onOk:$onOk");
+  onOk();
 }
