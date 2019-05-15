@@ -24,22 +24,9 @@ class _MinePageState extends State<MinePage> {
     // TODO: implement initState
     super.initState();
     debugPrint("initState");
-    for (int i = 0; i < 10; i++) {
-      PreferenceItem item;
-      if (i == 0) {
-        item = PreferenceItem(text: "账户管理", isGroupHeader: true);
-      } else if (i == 1) {
-        item = PreferenceItem(text: "结算账户", isGroup: true);
-      } else {
-        item = PreferenceItem(
-          text: "业务账户",
-        );
-      }
-      _preferenceItems.add(item);
-    }
     _providers.provide(Provider.value(model));
-
     model.loadProfile(context);
+    model.fetch();
   }
 
   @override
@@ -138,14 +125,20 @@ class _MinePageState extends State<MinePage> {
   }
 
   Widget _buildList() {
-    List<Widget> children = [];
-    children.add(_buildTitle());
-    children.add(_buildSubTitle());
-    children.add(_buildHeader());
-    children.addAll(_buildGroup(_preferenceItems));
-    return ListView(
-      children: children,
-      controller: ScrollController(),
+    return Provide<MineViewModel>(
+      builder: (context, child, model) {
+        print("model $model");
+        List<Widget> children = [];
+        children.add(_buildTitle());
+        children.add(_buildSubTitle());
+        children.add(_buildHeader());
+        children.addAll(_buildGroup(model.items));
+        var listView = ListView(
+          children: children,
+          controller: ScrollController(),
+        );
+        return listView;
+      },
     );
   }
 
@@ -300,11 +293,14 @@ class _MinePageState extends State<MinePage> {
   }
 
   Widget _buildLine() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Divider(
-        color: Colors.grey,
-        height: 2,
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Divider(
+          color: Colors.grey,
+          height: 2,
+        ),
       ),
     );
   }

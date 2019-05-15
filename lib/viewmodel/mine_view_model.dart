@@ -6,9 +6,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture/base/repository.dart';
 
 class MineViewModel extends ViewModel {
   List<PreferenceItem> _items = [];
+
+  Repository _repo = new Repository();
 
   get items => _items;
 
@@ -18,10 +21,21 @@ class MineViewModel extends ViewModel {
         DefaultAssetBundle.of(context).loadString("assets/profile.json");
 
     loadString.then((onValue) => Future.value(onValue));
+    loadString.asStream().listen(
+      (onData) {
+//        print(onData);
+        var profileEntity =
+            EntityFactory.generateOBJ<ProfileEntity>(json.decode(onData));
+        _items.addAll(profileEntity.data);
+        _items.forEach((f) => debugPrint("profile $f"));
+        notifyListeners();
+      },
+    );
 
     //create observable
-    var observable = Observable.fromFuture(
-            DefaultAssetBundle.of(context).loadString("assets/profile.json"))
+    var observable = Observable(DefaultAssetBundle.of(context)
+            .loadString("assets/profile.json")
+            .asStream())
         .delay(Duration(milliseconds: 500))
         .asBroadcastStream();
 
@@ -39,5 +53,7 @@ class MineViewModel extends ViewModel {
     });
   }
 
-
+  void fetch() {
+    _repo.get();
+  }
 }

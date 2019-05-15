@@ -8,7 +8,7 @@ class HttpManager {
   HttpManager._() {
     _dio = new Dio()
       ..options = BaseOptions(
-          baseUrl: AppConfig.domain,
+          baseUrl: AppConfig.test_domain,
           connectTimeout: 30000,
           receiveTimeout: 30000)
       ..interceptors.add(HeaderInterceptor())
