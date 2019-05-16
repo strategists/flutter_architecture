@@ -32,15 +32,18 @@ void main() {
 
   test('Create Observable from Future', () async {
     print('start');
-    Observable<String> fromFutureObservable =
-        Observable.fromFuture(asyncFunction());
-    fromFutureObservable.doOnData((onData) => print("doOnData :$onData")).doOnError(() {
-      print('doOnError');
-    }).doOnListen(() {
-      print('doOnListen');
-    }).doOnDone(() {
-      print('doOnDone');
-    }).listen((onData) => print('listen: $onData'));
+    Observable.fromFuture(asyncFunction())
+        .doOnListen(() {
+          print('doOnListen');
+        })
+        .doOnData((onData) => print("doOnData :$onData"))
+        .doOnError((error) {
+          print('doOnError $error');
+        })
+        .doOnDone(() {
+          print('doOnDone');
+        })
+        .listen((onData) => print('listen: $onData'));
   });
 
   test("create observable", () {

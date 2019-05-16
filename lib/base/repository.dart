@@ -6,28 +6,14 @@ class Repository {
   static const String tree = "/tree/json";
 
   void get<M>() {
-    /*Future<dynamic> future = HttpManager.getInstance().get(tree);
-    future.asStream().listen((onData) {
-      print("handleError: $onData");
-    }).onError((handleError) {
-      print("handleError: $handleError");
-    });*/
-    var observable = Observable.fromFuture(HttpManager.getInstance().get(tree));
-    observable.doOnData((onData) {
-      print("doOnData: $onData");
-    }).doOnListen(() {
+    Observable.fromFuture(HttpManager.getInstance().get(tree)).doOnListen(() {
       print("doOnListen:");
-    }).doOnError(() {
+    }).doOnData((onData) {
+      print("doOnData: $onData");
+    }).doOnError((error, stacktrace) {
       print("doOnError:");
     }).doOnDone(() {
       print("doOnDone:");
-    });/*.listen(*//*(onData) {
-      print("listen: $onData");
-    }, onError: () {
-      print("onError:");
-    }, onDone: () {
-      print("onDone:");
-    }*//*null);*/
-//    return observable;
+    }).listen(null);
   }
 }

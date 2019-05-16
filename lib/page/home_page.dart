@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture/style/app_colors.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_architecture/receivable/receivable_launch_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   ScrollController _scrollController;
   ScrollController _listScrollController;
   double w, h;
-  FixedExtentScrollPhysics _scrollPhysics= new FixedExtentScrollPhysics();
+  FixedExtentScrollPhysics _scrollPhysics = new FixedExtentScrollPhysics();
 
   @override
   void initState() {
@@ -299,7 +300,12 @@ class _HomePageState extends State<HomePage> {
         Align(
           alignment: Alignment.bottomRight,
           child: RaisedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                    return ReceivableLaunchPage();
+              }));
+            },
             child: Text("我要融资"),
           ),
         ),
