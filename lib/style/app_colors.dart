@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
   static const Color mine_header = Color(0xFF293862);
   static const Color mine_preference = Color(0xFFF8F9FE);
 
+  static const Color home_bg = Color(0xFFF7F9FC);
+
   static const Color home_item_title = Color(0xFF111A31);
   static const Color home_item_sub_card = Color(0xFFF7F9FC);
 }

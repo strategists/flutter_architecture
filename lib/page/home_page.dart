@@ -6,11 +6,18 @@ import 'package:flutter_architecture/receivable/receivable_launch_page.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light));
     return _HomePageState();
   }
 }
 
 class _HomePageState extends State<HomePage> {
+  static const double FOLD_HEAD = 150;
+  static const String url =
+      'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg';
+
   ScrollController _scrollController;
   ScrollController _listScrollController;
   double w, h;
@@ -21,13 +28,31 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     _scrollController = new ScrollController();
-    _listScrollController = new ScrollController();
-    _scrollController.addListener(() {});
+    _listScrollController = new ScrollController(initialScrollOffset: 0);
+    _listScrollController.addListener(() {
+      double offset = _listScrollController.offset;
+      print("offset:$offset");
+      _scrollController.jumpTo(offset);
+    });
+
+    _scrollController.addListener(() {
+      double offset = _scrollController.offset;
+      double statusBarHeight = MediaQuery.of(context).padding.top;
+      if (offset == FOLD_HEAD) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.dark));
+      } else if (offset == 0) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+            .copyWith(
+                statusBarBrightness: Brightness.light,
+                statusBarIconBrightness: Brightness.light));
+      }
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
     _listScrollController.dispose();
@@ -43,105 +68,37 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.light));
     w = MediaQuery.of(context).size.width;
     h = MediaQuery.of(context).size.height;
-    print("w= $w");
-    print("h= $h");
-    return Container(
-      color: AppColors.mine_header,
-      child: Stack(
-        children: <Widget>[
-          _buildBody(),
-          Positioned(
-            left: 16,
-            right: 16,
-            top: 100,
-            bottom: 0,
-            child: _buildListView(),
-          )
-        ],
-      ),
-    );
-  }
-
-  CustomScrollView buildCustomScrollView() {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: <Widget>[
-        Container(
-          child: Image.network(
-            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg',
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-          color: Colors.white,
+    var stack = Stack(
+      children: <Widget>[
+        _buildNestedScrollView(),
+        Positioned(
+          left: 16,
+          right: 16,
+          top: 0,
+          bottom: 0,
+          child: SafeArea(child: _buildListView()),
         )
       ],
     );
-  }
-
-  Widget _buildScroll() {
-    return CustomScrollView(
-      slivers: <Widget>[
-        const SliverAppBar(
-          pinned: true,
-          expandedHeight: 250.0,
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text('Demo'),
-          ),
-        ),
-        SliverGrid(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200.0,
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-            childAspectRatio: 4.0,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return Container(
-                alignment: Alignment.center,
-                color: Colors.teal[100 * (index % 9)],
-                child: Text('grid item $index'),
-              );
-            },
-            childCount: 20,
-          ),
-        ),
-        _sliverFixedExtentList(),
-      ],
+    return Container(
+      color: AppColors.home_bg,
+      child: stack,
     );
   }
-
-  SliverFixedExtentList _sliverFixedExtentList() {
-    return SliverFixedExtentList(
-      itemExtent: 50.0,
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return Container(
-            alignment: Alignment.center,
-            color: Colors.lightBlue[100 * (index % 9)],
-            child: Text('list item $index'),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildBody() {
+  Widget _buildNestedScrollView() {
     return NestedScrollView(
+      controller: _scrollController,
+      physics: NeverScrollableScrollPhysics(),
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         debugPrint("innerBoxIsScrolled: $innerBoxIsScrolled");
         return <Widget>[
           SliverToBoxAdapter(
             child: Container(
-              height: 150,
-              child: Image.network(
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg',
+              height: FOLD_HEAD,
+              child: Image.asset(
+                "assets/fold_head.jpg",
                 fit: BoxFit.cover,
               ),
             ),
@@ -149,43 +106,7 @@ class _HomePageState extends State<HomePage> {
         ];
       },
       body: Container(
-        color: Colors.white,
-      ),
-    );
-  }
-
-  SliverAppBar _buildSliverAppBar() {
-    return SliverAppBar(
-      //展开高度
-      expandedHeight: 150.0,
-//            title: Text("中链融"),
-      centerTitle: true,
-      //是否随着滑动隐藏标题
-      floating: false,
-      textTheme: TextTheme(
-        title: TextStyle(
-          color: Colors.black,
-        ),
-      ),
-      //是否固定在顶部
-      pinned: true,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
-      //可折叠的应用栏
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        centerTitle: true,
-        title: Text(
-          '中链融',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16.0,
-          ),
-        ),
-        background: Image.network(
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg',
-          fit: BoxFit.cover,
-        ),
+        color: AppColors.home_bg,
       ),
     );
   }
@@ -214,7 +135,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildSubTitle() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0),
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 20.0),
       child: Text(
         "链接信用，融通资金",
         style: TextStyle(
@@ -233,7 +154,6 @@ class _HomePageState extends State<HomePage> {
       widgets.add(_buildItemCard());
     }
     return ListView(
-      physics: ClampingScrollPhysics(parent: _scrollPhysics),
       children: widgets,
       controller: _listScrollController,
     );
@@ -301,9 +221,8 @@ class _HomePageState extends State<HomePage> {
           alignment: Alignment.bottomRight,
           child: RaisedButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                    return ReceivableLaunchPage();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return ReceivableLaunchPage();
               }));
             },
             child: Text("我要融资"),

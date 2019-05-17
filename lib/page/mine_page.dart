@@ -11,7 +11,8 @@ class MinePage extends StatefulWidget {
   }
 }
 
-class _MinePageState extends State<MinePage> {
+class _MinePageState extends State<MinePage>
+    with AutomaticKeepAliveClientMixin {
   String _uname = "张北海";
   String _mobile = "13693302061";
   List<PreferenceItem> _preferenceItems = [];
@@ -66,8 +67,9 @@ class _MinePageState extends State<MinePage> {
       ),
     );
     var container = Container(
-      color: AppColors.mine_header,
-      child: SafeArea(child: safeArea),
+//      color: AppColors.mine_header,
+//      child: SafeArea(child: safeArea),
+      child: _buildCollapsible(),
     );
     return ProviderNode(
       providers: _providers,
@@ -78,36 +80,54 @@ class _MinePageState extends State<MinePage> {
   Widget _buildCollapsible() {
     return NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        var sliverToBoxAdapter = SliverToBoxAdapter(
+          child: Stack(
+            children: <Widget>[
+              _buildPreferenceIteBg(),
+              _buildHeaderItem(),
+            ],
+          ),
+        );
         return <Widget>[
-          _buildSliverAppBar(),
+          new SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            child: new SliverAppBar(
+              pinned: true,
+              expandedHeight: 300.0,
+              // 这个高度必须比flexibleSpace高度大
+              forceElevated: innerBoxIsScrolled,
+              bottom: PreferredSize(
+                  child: new Container(
+                    color: Colors.redAccent[200],
+                  ),
+                  preferredSize: new Size(double.infinity, 46.0)),
+              // 46.0为TabBar的高度，也就是tabs.dart中的_kTabHeight值，因为flutter不支持反射所以暂时没法通过代码获取
+              flexibleSpace: new Container(
+                child: new Column(
+                  children: <Widget>[
+                    new AppBar(
+                      title: Text("this is title"),
+                    ),
+                    new Expanded(
+                      child: new Container(
+                        child: Image.asset(
+                          "images/test.jpg",
+                          repeat: ImageRepeat.repeat,
+                        ),
+                        width: double.infinity,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
         ];
       },
-      body: _buildList(),
-    );
-  }
-
-  SliverAppBar _buildSliverAppBar() {
-    return SliverAppBar(
-      //展开高度
-      expandedHeight: 150.0,
-      //是否随着滑动隐藏标题
-      floating: false,
-      //是否固定在顶部
-      pinned: true,
-      //可折叠的应用栏
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
-        title: Text(
-          '可折叠的组件',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-          ),
-        ),
-        background: Image.network(
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg',
-          fit: BoxFit.cover,
-        ),
+      physics: FixedExtentScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      body: Container(
+        child: _buildList(),
       ),
     );
   }
@@ -119,8 +139,18 @@ class _MinePageState extends State<MinePage> {
       left: 0,
       right: 0,
       child: Container(
-        color: AppColors.mine_preference,
+        color: AppColors.mine_header,
       ),
+    );
+  }
+
+  Widget _buildHeaderItem() {
+    return Column(
+      children: <Widget>[
+        _buildTitle(),
+        _buildSubTitle(),
+        _buildHeader(),
+      ],
     );
   }
 
@@ -129,9 +159,9 @@ class _MinePageState extends State<MinePage> {
       builder: (context, child, model) {
         print("model $model");
         List<Widget> children = [];
-        children.add(_buildTitle());
-        children.add(_buildSubTitle());
-        children.add(_buildHeader());
+//        children.add(_buildTitle());
+//        children.add(_buildSubTitle());
+//        children.add(_buildHeader());
         children.addAll(_buildGroup(model.items));
         var listView = ListView(
           children: children,
@@ -311,4 +341,8 @@ class _MinePageState extends State<MinePage> {
       height: 6.0,
     );
   }
+
+  @override
+  // TODO: 页面切换保存状态
+  bool get wantKeepAlive => false;
 }
