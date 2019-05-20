@@ -87,6 +87,7 @@ class _HomePageState extends State<HomePage> {
       child: stack,
     );
   }
+
   Widget _buildNestedScrollView() {
     return NestedScrollView(
       controller: _scrollController,
@@ -119,7 +120,13 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Icon(Icons.access_alarms),
+          Icon(
+            Icons.access_alarms,
+            color: Colors.white,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+          ),
           Text(
             "中链融",
             style: TextStyle(
@@ -167,14 +174,12 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         ConstrainedBox(
           constraints: BoxConstraints(minHeight: 100),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.input_error,
-            ),
-            child: _buildSubRow(),
-          ),
+          child: _buildSubRow(),
         ),
-        _buildSubCard(),
+        ConstrainedBox(
+          constraints: BoxConstraints(minWidth: 315,maxWidth: 315),
+          child: _buildSubCard(),
+        ),
       ],
     );
 
@@ -196,30 +201,29 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       fit: StackFit.passthrough,
       children: <Widget>[
-        DecoratedBox(
-          decoration: BoxDecoration(color: AppColors.login_bg),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "应收通",
-                style:
-                    TextStyle(color: AppColors.home_item_title, fontSize: 18),
-              ),
-              Text(
-                "最高可借额度(元)",
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              Text("500000",
-                  style: TextStyle(color: Colors.grey, fontSize: 24)),
-            ],
-          ),
+        Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "应收通",
+              style: TextStyle(color: AppColors.home_item_title, fontSize: 18),
+            ),
+            Text(
+              "最高可借额度(元)",
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+            Text("500000", style: TextStyle(color: Colors.grey, fontSize: 24)),
+          ],
         ),
         Align(
           alignment: Alignment.bottomRight,
           child: RaisedButton(
+            textTheme: ButtonTextTheme.primary,
+            color: AppColors.home_item_button,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(18))),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return ReceivableLaunchPage();

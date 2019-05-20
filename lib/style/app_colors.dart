@@ -17,4 +17,10 @@ import 'package:flutter/material.dart';
 
   static const Color home_item_title = Color(0xFF111A31);
   static const Color home_item_sub_card = Color(0xFFF7F9FC);
+  static const Color home_item_button = Color(0xFF3387FB);
+
+  static const Color invoice_bg = Color(0xFFF8F9FE);
+  static const Color invoice_state_text = Color(0xFFBF6C42);
+
+
 }

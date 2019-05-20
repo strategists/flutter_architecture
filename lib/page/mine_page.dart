@@ -3,6 +3,9 @@ import 'package:flutter_architecture/style/style.dart';
 import 'package:flutter_architecture/entity/profile_entity.dart';
 import 'package:flutter_architecture/viewmodel/mine_view_model.dart';
 import 'package:provide/provide.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture/component/component.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -13,6 +16,11 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage>
     with AutomaticKeepAliveClientMixin {
+  static const double FOLD_HEAD = 220;
+
+  var _listScrollController = ScrollController();
+  var _scrollController = ScrollController();
+
   String _uname = "张北海";
   String _mobile = "13693302061";
   List<PreferenceItem> _preferenceItems = [];
@@ -25,6 +33,26 @@ class _MinePageState extends State<MinePage>
     // TODO: implement initState
     super.initState();
     debugPrint("initState");
+    _listScrollController.addListener(() {
+      double offset = _listScrollController.offset;
+      print("offset:$offset");
+      _scrollController.jumpTo(offset);
+    });
+
+    _scrollController.addListener(() {
+      double offset = _scrollController.offset;
+      double statusBarHeight = MediaQuery.of(context).padding.top;
+      if (offset == FOLD_HEAD) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.dark));
+      } else if (offset == 0) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+            .copyWith(
+                statusBarBrightness: Brightness.light,
+                statusBarIconBrightness: Brightness.light));
+      }
+    });
     _providers.provide(Provider.value(model));
     model.loadProfile(context);
     model.fetch();
@@ -59,6 +87,18 @@ class _MinePageState extends State<MinePage>
     model.dispose();
   }
 
+  void _itemClick(PreferenceItem item) {
+    Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) {
+        return AccountCommPage(
+          title: item.text,
+          body: Container(),
+        );
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var safeArea = SafeArea(
@@ -68,12 +108,42 @@ class _MinePageState extends State<MinePage>
     );
     var container = Container(
 //      color: AppColors.mine_header,
-//      child: SafeArea(child: safeArea),
-      child: _buildCollapsible(),
+      child: Stack(
+        children: <Widget>[
+          _buildScrollBg(),
+          SafeArea(
+            child: _buildList(),
+          )
+        ],
+      ),
+//      child: _buildCollapsible(),
     );
     return ProviderNode(
       providers: _providers,
       child: container,
+    );
+  }
+
+  Widget _buildScrollBg() {
+    return NestedScrollView(
+      controller: _scrollController,
+      physics: NeverScrollableScrollPhysics(),
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverToBoxAdapter(
+            child: Container(
+              height: FOLD_HEAD,
+              child: Image.asset(
+                "assets/fold_head.jpg",
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ];
+      },
+      body: Container(
+        color: AppColors.home_bg,
+      ),
     );
   }
 
@@ -159,13 +229,13 @@ class _MinePageState extends State<MinePage>
       builder: (context, child, model) {
         print("model $model");
         List<Widget> children = [];
-//        children.add(_buildTitle());
-//        children.add(_buildSubTitle());
-//        children.add(_buildHeader());
+        children.add(_buildTitle());
+        children.add(_buildSubTitle());
+        children.add(_buildHeader());
         children.addAll(_buildGroup(model.items));
         var listView = ListView(
           children: children,
-          controller: ScrollController(),
+          controller: _listScrollController,
         );
         return listView;
       },
@@ -298,7 +368,9 @@ class _MinePageState extends State<MinePage>
   Widget _buildItem(PreferenceItem item) {
     var listTile = ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-      onTap: () {},
+      onTap: () {
+        _itemClick(item);
+      },
       title: Text(
         item.text,
         style: TextStyle(

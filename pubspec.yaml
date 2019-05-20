@@ -26,6 +26,7 @@ dependencies:
   dio: ^2.0.7
   rxdart: ^0.21.0
   provide: ^1.0.2
+  provider: ^2.0.1
   cached_network_image: ^0.7.0
   shared_preferences: ^0.5.1+2
   pin_input_text_field: ^0.3.0

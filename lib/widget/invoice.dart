@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
+import 'package:flutter_architecture/style/style.dart';
 
 class Invoice extends StatefulWidget {
   @override
@@ -21,16 +22,16 @@ class _InvoiceState extends State<Invoice> {
         children: <Widget>[
           Expanded(
             flex: 1,
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.red),
-              child: Icon(Icons.contacts),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: _buildHeadTitle(),
             ),
           ),
           Expanded(
             flex: 2,
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.yellowAccent),
-              child: Icon(Icons.add_a_photo),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: _buildBottom(),
             ),
           ),
         ],
@@ -43,6 +44,83 @@ class _InvoiceState extends State<Invoice> {
       child: Card(
         child: customPaint,
       ),
+    );
+  }
+
+  Widget _buildHeadTitle() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "应收编号：20171005HX104",
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+        ),
+        Text(
+          ".待审批",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12,
+            color: AppColors.invoice_state_text,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildBottom() {
+    var textStyle = TextStyle(color: Colors.black, fontSize: 14);
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "申请日：",
+                    style: textStyle,
+                  ),
+                  Text(
+                    "2019-08-08",
+                    style: textStyle,
+                  ),
+                ]),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+            ),
+            Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "融资金额：",
+                    style: textStyle,
+                  ),
+                  Text(
+                    "￥85,800.00",
+                    style: textStyle,
+                  )
+                ]),
+          ],
+        ),
+        Positioned(
+          right: 14,
+          bottom: 6,
+          child: Icon(Icons.chevron_right, color: Colors.grey),
+        ),
+      ],
     );
   }
 }
@@ -61,7 +139,7 @@ class _SeparatePainter extends CustomPainter {
 //    canvas.clipRect(rect);
 //    paint.color = Colors.white;
 //    canvas.drawRect(rect, paint);
-    paint.color = Colors.black;
+    paint.color = Colors.grey;
     canvas.drawCircle(Offset(0, size.height / 3), semicircle, paint);
     canvas.drawCircle(Offset(size.width, size.height / 3), semicircle, paint);
     _drawDash(canvas, size);
