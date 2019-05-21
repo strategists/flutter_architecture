@@ -1,16 +1,59 @@
 import 'package:flutter/material.dart';
 
-class CompositeButton extends StatefulWidget {
+class SolidButton extends StatefulWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final Color textColor;
+  final Color backgroundColor;
+  final double round;
+  final double width;
+  final double height;
+
+  const SolidButton({
+    Key key,
+    this.text,
+    this.onPressed,
+    this.textColor = Colors.white,
+    this.backgroundColor = Colors.blue,
+    this.round = 18,
+    this.width,
+    this.height = 36,
+  })  : assert(onPressed != null),
+        super(key: key);
+
   @override
-  _CompositeButtonState createState() {
-    return _CompositeButtonState();
+  _SolidButtonState createState() {
+    return _SolidButtonState();
   }
 }
 
-class _CompositeButtonState extends State<CompositeButton> {
+class _SolidButtonState extends State<SolidButton> {
   @override
   Widget build(BuildContext context) {
-    return RaisedButton();
+    return widget.width != null && widget.height != null
+        ? SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: _buildRaisedButton(),
+          )
+        : _buildRaisedButton();
+  }
+
+  RaisedButton _buildRaisedButton() {
+    return RaisedButton(
+      onPressed: widget.onPressed,
+      child: Text(
+        widget.text,
+        style: TextStyle(color: widget.textColor),
+      ),
+      textColor: widget.textColor,
+      color: widget.backgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(widget.round),
+        ),
+      ),
+    );
   }
 }
 
@@ -55,4 +98,34 @@ class _TextButtonState extends State<TextButton> {
       ),
     );
   }
+}
+
+class SpecificButton extends RaisedButton {
+  final String text;
+  final VoidCallback onPressed;
+  final Color textColor;
+  final Color backgroundColor;
+  final double radius;
+
+  SpecificButton(
+    this.text, {
+    this.textColor = Colors.white,
+    this.radius = 18,
+    this.onPressed,
+    this.backgroundColor = Colors.blue,
+  }) : super(
+          onPressed: onPressed,
+//          textTheme: ButtonTextTheme.primary,
+          textColor: textColor,
+          color: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(18),
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(color: textColor),
+          ),
+        );
 }
