@@ -6,6 +6,7 @@ import 'package:flutter_architecture/style/style.dart';
 import 'package:provider/provider.dart';
 import 'receivable_view_model.dart';
 import 'package:flutter_architecture/widget/button.dart';
+import 'apply_record.dart';
 
 class ReceivableLaunchPage extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class _ReceivableLaunchPageState extends State<ReceivableLaunchPage> {
     super.initState();
     _receivableViewModel.fetch();
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -52,15 +54,15 @@ class _ReceivableLaunchPageState extends State<ReceivableLaunchPage> {
 
   Positioned _buildPositioned() {
     return Positioned(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 13),
-                child: _buildCard(),
-              ),
-              left: 0,
-              right: 0,
-              bottom: 37,
-              height: 314,
-            );
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 13),
+        child: _buildCard(),
+      ),
+      left: 0,
+      right: 0,
+      bottom: 37,
+      height: 314,
+    );
   }
 
   Widget _buildGroundContainer() {
@@ -107,22 +109,34 @@ class _ReceivableLaunchPageState extends State<ReceivableLaunchPage> {
   Widget _buildTable() {
     List<TableRow> tabRow = [];
     var data = "我要还款";
-    var column = Column(
-      children: <Widget>[
-        Icon(
-          Icons.error,
-          size: 43,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 6),
-        ),
-        Text(data)
-      ],
+    var row = InkResponse(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ApplyRecordPage();
+            },
+          ),
+        );
+      },
+      child: Column(
+        children: <Widget>[
+          Icon(
+            Icons.error,
+            size: 43,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+          ),
+          Text(data)
+        ],
+      ),
     );
     var tableRow = TableRow(children: <Widget>[
-      column,
-      column,
-      column,
+      row,
+      row,
+      row,
     ]);
     tabRow.add(tableRow);
     var gap = Padding(

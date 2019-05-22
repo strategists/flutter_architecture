@@ -19,6 +19,10 @@ class ViewModel with ChangeNotifier {
   }
 }
 
+abstract class Bloc {
+  void dispose();
+}
+
 abstract class PageProviderNode extends StatelessWidget {
   final Providers providers = new Providers();
 
