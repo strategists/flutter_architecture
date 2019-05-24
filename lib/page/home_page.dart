@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const double FOLD_HEAD = 150;
+//  static const double FOLD_HEAD = 600;
   static const String url =
       'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549129578802&di=f866c638ea12ad13c5d603bcc008a6c2&imgtype=0&src=http%3A%2F%2Fpic2.16pic.com%2F00%2F07%2F66%2F16pic_766297_b.jpg';
 
@@ -27,16 +28,18 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _scrollController = new ScrollController();
+    _scrollController = new ScrollController(initialScrollOffset: 0);
     _listScrollController = new ScrollController(initialScrollOffset: 0);
     _listScrollController.addListener(() {
       double offset = _listScrollController.offset;
       print("offset:$offset");
       _scrollController.jumpTo(offset);
+//      _scrollController.
     });
 
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
+      print("scrollController offset:$offset");
       double statusBarHeight = MediaQuery.of(context).padding.top;
       if (offset == FOLD_HEAD) {
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(

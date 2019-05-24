@@ -1,8 +1,8 @@
 import 'package:rxdart/rxdart.dart';
 import 'http_manager.dart';
-import 'package:flutter_architecture/entity_factory.dart';
 import 'dart:convert';
 import 'package:flutter_architecture/entity/study_info_entity.dart';
+import 'package:flutter_architecture/entity/entity_factory.dart';
 
 class Repository {
   static const String getPath = "/article/list/0/json";

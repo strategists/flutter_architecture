@@ -83,5 +83,3 @@ class _ShelfPageState extends State<_ShelfPage> {
     );
   }
 }
-
-class PageViewManager {}
