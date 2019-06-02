@@ -6,6 +6,9 @@ import 'package:provide/provide.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture/component/component.dart';
+import 'package:flutter_architecture/account/settlement/settlement_page.dart';
+import 'package:flutter_architecture/account/business/business_page.dart';
+
 
 class MinePage extends StatefulWidget {
   @override
@@ -90,11 +93,14 @@ class _MinePageState extends State<MinePage>
   void _itemClick(PreferenceItem item) {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (context) {
+      /*CupertinoPageRoute(builder: (context) {
         return AccountCommPage(
           title: item.text,
           body: Container(),
         );
+      }),*/
+      CupertinoPageRoute(builder: (context) {
+        return BusinessPage();
       }),
     );
   }
