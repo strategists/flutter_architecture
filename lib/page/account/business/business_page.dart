@@ -53,7 +53,7 @@ class _BusinessState extends State<BusinessPage>
   Widget _buildBody() {
     return Container(
       color: Colors.red,
-      /*child: DefaultTabController(
+      child: DefaultTabController(
         length: choices.length,
         child: Column(
           children: <Widget>[
@@ -64,8 +64,8 @@ class _BusinessState extends State<BusinessPage>
             ),
           ],
         ),
-      ),*/
-      child: Column(
+      ),
+     /* child: Column(
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -78,15 +78,15 @@ class _BusinessState extends State<BusinessPage>
               Text("adASDs"),
             ],
           ),
-          // _buildDefaultTabController(),
-          _buildTabBar(),
+//           _buildDefaultTabController(),
+//          _buildTabBar(),
           Expanded(
             flex: 1,
-//              child: _buildTabBarView(),
-            child: _buildPageView(),
+              child: _buildTabBarView(),
+//            child: _buildPageView(),
           ),
         ],
-      ),
+      ),*/
     );
   }
 
@@ -99,7 +99,7 @@ class _BusinessState extends State<BusinessPage>
 
   TabBar _buildTabBar() {
     return new TabBar(
-      controller: _tabController,
+//      controller: _tabController,
       isScrollable: true,
       tabs: choices.map((Choice choice) {
         return new Tab(
@@ -112,7 +112,7 @@ class _BusinessState extends State<BusinessPage>
 
   TabBarView _buildTabBarView() {
     return new TabBarView(
-      controller: _tabController,
+//      controller: _tabController,
       children: choices.map((Choice choice) {
         return new Padding(
           padding: const EdgeInsets.all(16.0),

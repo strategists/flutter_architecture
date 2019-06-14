@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture/style/app_colors.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_architecture/receivable/receivable_launch_page.dart';
+import 'package:flutter_architecture/page/receivable/receivable_launch_page.dart';
 
 class HomePage extends StatefulWidget {
   @override

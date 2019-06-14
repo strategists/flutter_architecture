@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 import 'login_view_model.dart';
 import 'package:flutter_architecture/style/style.dart';
-import 'package:flutter_architecture/login/input_mobile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'input_mobile_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override

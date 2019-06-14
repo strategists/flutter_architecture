@@ -65,9 +65,6 @@ class HttpManager {
     }
     return response.data;
   }
-
-
-
 }
 
 class HeaderInterceptor extends Interceptor {

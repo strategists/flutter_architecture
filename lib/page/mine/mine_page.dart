@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture/style/style.dart';
 import 'package:flutter_architecture/entity/profile_entity.dart';
-import 'package:flutter_architecture/viewmodel/mine_view_model.dart';
+import 'package:flutter_architecture/page/mine/mine_view_model.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture/component/component.dart';
-import 'package:flutter_architecture/account/settlement/settlement_page.dart';
-import 'package:flutter_architecture/account/business/business_page.dart';
+import 'package:flutter_architecture/page/account/account.dart';
 
 
 class MinePage extends StatefulWidget {

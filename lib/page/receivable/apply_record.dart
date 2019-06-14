@@ -4,7 +4,7 @@ import 'package:flutter_architecture/widget/dash_semicircle.dart';
 import 'package:flutter_architecture/component/specific_app_bar.dart';
 import 'package:flutter_architecture/style/style.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_architecture/receivable/apply_record_bloc.dart';
+import 'apply_record_bloc.dart';
 
 class ApplyRecordPage extends StatefulWidget {
   @override
