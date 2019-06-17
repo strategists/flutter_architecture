@@ -37,7 +37,6 @@ class _MinePageState extends State<MinePage>
     debugPrint("initState");
     _listScrollController.addListener(() {
       double offset = _listScrollController.offset;
-      print("offset:$offset");
       _scrollController.jumpTo(offset);
     });
 

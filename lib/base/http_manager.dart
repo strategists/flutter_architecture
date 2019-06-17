@@ -12,11 +12,13 @@ class HttpManager {
           connectTimeout: 30000,
           receiveTimeout: 30000)
       ..interceptors.add(HeaderInterceptor())
-      ..interceptors.add(LogInterceptor(
-        requestBody: true,
-        responseBody: false,
-        responseHeader: false
-      ));
+      ..interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: false,
+          responseHeader: false,
+        ),
+      );
   }
 
   static HttpManager getInstance() {
@@ -26,17 +28,40 @@ class HttpManager {
     return sInstance;
   }
 
+  Future<dynamic> getData<T>(path,
+      {options,
+        cancelToken,
+        queryParameters = const <String, dynamic>{},}) async {
+    Response response;
+    try {
+      response = await _dio.get<T>(path,
+          queryParameters: queryParameters, cancelToken: cancelToken);
+      print("statusCode: ${response.statusCode}");
+      print("statusMessage: ${response.statusMessage}");
+      print("data: ${response.data}");
+    } on DioError catch (e) {
+      if (CancelToken.isCancel(e)) {
+        print('get请求取消! ' + e.message);
+      } else {
+        print('get请求发生错误：$e');
+      }
+    }
+    return response.data;
+  }
+
+
   // get 请求封装
   get(path,
       {options,
-      cancelToken,
-      queryParameters = const <String, dynamic>{}}) async {
+        cancelToken,
+        queryParameters = const <String, dynamic>{},}) async {
     print('get:::url：$path ,map: $queryParameters');
     Response response;
     try {
       response = await _dio.get(path,
           queryParameters: queryParameters, cancelToken: cancelToken);
-      print(response);
+      print("statusCode: ${response.statusCode}");
+      print("statusMessage: ${response.statusMessage}");
     } on DioError catch (e) {
       if (CancelToken.isCancel(e)) {
         print('get请求取消! ' + e.message);

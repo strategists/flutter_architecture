@@ -19,7 +19,18 @@ class MineViewModel extends ViewModel {
 
   void loadProfile(BuildContext context) {
     debugPrint("MineViewModel $context");
-    DefaultAssetBundle.of(context)
+    _repo.loadFormAsset<ProfileEntity>(context, "assets/profile.json").listen(
+          (onData) {
+            _items.addAll(onData.data);
+            notifyListeners();
+          },
+          onDone: () {},
+          onError: (error, stacktrace) {
+            print("onError $error");
+            print("onError $stacktrace");
+          },
+        );
+    /*DefaultAssetBundle.of(context)
         .loadString("assets/profile.json")
         .asStream()
         .listen((onData) {
@@ -34,10 +45,10 @@ class MineViewModel extends ViewModel {
     }, onError: (error, stacktrace) {
       print("onError $error");
       print("onError $stacktrace");
-    });
+    });*/
   }
 
   void fetch() {
-    _repo.get();
+    _repo.fetch();
   }
 }

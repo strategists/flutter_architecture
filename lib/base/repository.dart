@@ -1,21 +1,34 @@
+import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:rxdart/rxdart.dart';
 import 'http_manager.dart';
-import 'dart:convert';
-import 'package:flutter_architecture/entity/study_info_entity.dart';
 import 'package:flutter_architecture/entity/entity_factory.dart';
+import 'package:flutter_architecture/entity/entity.dart';
 
 class Repository {
   static const String getPath = "/article/list/0/json";
   static const String tree = "/tree/json";
   static const String project = "/project/tree/json";
 
-  void get<M>() {
-    Observable.fromFuture(HttpManager.getInstance().get(tree)).doOnListen(() {
+  Observable<T> loadFormAsset<T>(BuildContext context, String path) {
+    return Observable.fromFuture(
+            DefaultAssetBundle.of(context).loadString(path))
+        .map((jsonStr) {
+      return EntityFactory.generateOBJ<T>(json.decode(jsonStr));
+    });
+  }
+
+  void fetch<M>() {
+//    var future = HttpManager.getInstance().get(tree);
+    var future = HttpManager.getInstance().getData(tree);
+    Observable.fromFuture(future).doOnListen(() {
       print("doOnListen:");
     }).doOnData((onData) {
-      print("doOnData: $onData");
+      var entity = EntityFactory.generateOBJ<StudyInfoEntity>(onData);
+      print("doOnData: $entity");
     }).doOnError((error, stacktrace) {
-      print("doOnError:");
+      print("onError $error");
+      print("onError $stacktrace");
     }).doOnDone(() {
       print("doOnDone:");
     }).listen(null);
@@ -37,9 +50,8 @@ class Repository {
     });
   }
 
-   Future<Object> getProject() async {
+  Future<Object> getProject() async {
     var res = await HttpManager.getInstance().get(project);
     return EntityFactory.generateOBJ<StudyInfoEntity>(res);
   }
-
 }
