@@ -10,7 +10,8 @@ class HttpManager {
       ..options = BaseOptions(
           baseUrl: AppConfig.test_domain,
           connectTimeout: 30000,
-          receiveTimeout: 30000)
+          receiveTimeout: 30000,
+      )
       ..interceptors.add(HeaderInterceptor())
       ..interceptors.add(
         LogInterceptor(
@@ -102,5 +103,26 @@ class HeaderInterceptor extends Interceptor {
           .putIfAbsent('Authorization', () => 'Bearer' + ' ' + token);
     }
     return super.onRequest(options);
+  }
+
+
+}
+
+class Result<T> {
+  bool success;
+  int code;
+  String message; //消息
+  T data;
+
+  Result(this.success, this.code, this.message, this.data);
+  Result.fromJson(Map<String, dynamic> map)
+      : success = map['success'],
+        code = map['code'],
+        message = map['message'],
+        data = map['data'];
+
+  @override
+  String toString() {
+    return "{success: $success, code:$code, message: $message, data<${data.runtimeType.toString()}>:${data.toString()}}";
   }
 }

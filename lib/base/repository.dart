@@ -18,22 +18,6 @@ class Repository {
     });
   }
 
-  void fetch<M>() {
-//    var future = HttpManager.getInstance().get(tree);
-    var future = HttpManager.getInstance().getData(tree);
-    Observable.fromFuture(future).doOnListen(() {
-      print("doOnListen:");
-    }).doOnData((onData) {
-      var entity = EntityFactory.generateOBJ<StudyInfoEntity>(onData);
-      print("doOnData: $entity");
-    }).doOnError((error, stacktrace) {
-      print("onError $error");
-      print("onError $stacktrace");
-    }).doOnDone(() {
-      print("doOnDone:");
-    }).listen(null);
-  }
-
   Observable<Object> getReceivable() {
     return Observable.fromFuture(HttpManager.getInstance().get(tree))
         .map((jsonStr) {
@@ -53,5 +37,33 @@ class Repository {
   Future<Object> getProject() async {
     var res = await HttpManager.getInstance().get(project);
     return EntityFactory.generateOBJ<StudyInfoEntity>(res);
+  }
+
+  Observable<M> rxFetch<M>(String path, {Map params}) {
+    var future = HttpManager.getInstance().getData(tree);
+//    var future = Api.shared().get(path, params: params);
+    return Observable.fromFuture(future).doOnListen(() {
+      debugPrint("Repository doOnListen:");
+
+      ///todo 开始请求接口时通用逻辑处理
+    }).map((resObj) {
+      debugPrint("Repository map: $resObj");
+      return EntityFactory.generateOBJ<M>(resObj.data);
+    }).doOnData((onData) {
+      debugPrint("Repository doOnData: $onData");
+    }).doOnError((error, stacktrace) {
+      debugPrint("Repository error: $error \n $stacktrace");
+
+      ///todo 通用错误处理
+    }).doOnDone(() {
+      debugPrint("Repository doOnDone:");
+
+      ///todo 请求结束通用逻辑处理
+    });
+  }
+
+  Future<M> fetch<M>(String path, {Map params}) async {
+    var res = await HttpManager.getInstance().get(project);
+    return EntityFactory.generateOBJ<M>(res);
   }
 }
