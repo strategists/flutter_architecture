@@ -49,6 +49,6 @@ class MineViewModel extends ViewModel {
   }
 
   void fetch() {
-    _repo.fetch();
+//    _repo.fetch();
   }
 }
